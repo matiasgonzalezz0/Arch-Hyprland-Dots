@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Package requirements: grim, slurp and wl-clipboard  
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Switches the keyboard layout and saves it to .cache.
 
