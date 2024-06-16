@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copies files and sets up all dots.
 
@@ -15,3 +15,5 @@ ln -sf /home/$_user/.config/waybar/configs/\[TOP\]\ Default_v2 \
 cp ./.zshrc /home/$_user/
 
 sudo cp ./usr_scripts/* /usr/local/bin
+
+echo "All files copied to local machine."
