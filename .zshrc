@@ -107,6 +107,7 @@ export PATH=$PATH:$HOME/.local/bin
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias kssh="kitten ssh"
+alias icat="kitten icat"
 alias nfzf="fd --type f --hidden --exclude .git | fzf | xargs nvim"
 
 start-ssh-git() {
