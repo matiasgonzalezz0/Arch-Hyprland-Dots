@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+_modules_path="/mnt/d/Dev/Agroin/"
+
+if [ -z "$1" ]; then
+  echo "No se ingreso ninguna opcion (dev | run)"
+  exit 1
+fi
+
+_input="$1"
+
+case $_input in
+  "dev")
+    cd "$_modules_path"
+
+    tmux new-session -d -s $_input
+
+    tmux rename-window -t $_input:0 'frontend'
+    tmux send-keys -t $_input:0 'cd frontend' C-m
+    tmux send-keys -t $_input:0 'nvim .' C-m
+
+    tmux new-window -t $_input:1 -n 'backend'
+    tmux send-keys -t $_input:1 'cd backend' C-m
+    tmux send-keys -t $_input:1 'nvim .' C-m
+
+    tmux attach-session -t $_input:0
+    tmux kill-session -t $_input
+    ;;
+  "run")
+    cd "$_modules_path"
+
+    tmux new-session -d -s $_input
+
+    tmux rename-window -t $_input:0 'frontend'
+    tmux send-keys -t $_input:0 'cd frontend' C-m
+    tmux send-keys -t $_input:0 'yarn' C-m
+    tmux send-keys -t $_input:0 'yarn dev' C-m
+
+    tmux new-window -t $_input:1 -n 'backend'
+    tmux send-keys -t $_input:1 'cd backend' C-m
+    tmux send-keys -t $_input:1 'pyenv activate agroin' C-m
+    tmux send-keys -t $_input:1 'python manage.py runserver' C-m
+
+    tmux new-window -t $_input:2 -n 'celery'
+    tmux send-keys -t $_input:2 'cd backend' C-m
+    tmux send-keys -t $_input:2 'pyenv activate agroin' C-m
+    tmux send-keys -t $_input:2 'celery -A core worker -l INFO' C-m
+
+    tmux new-window -t $_input:3 -n 'bash'
+    tmux send-keys -t $_input:3 'cd backend' C-m
+    tmux send-keys -t $_input:3 'pyenv activate agroin' C-m
+
+    tmux attach-session -t $_input:0
+    tmux kill-session -t $_input
+    ;;
+  *)
+    echo "Opcion ingresada no valida"
+    exit 1
+    ;;
+esac
