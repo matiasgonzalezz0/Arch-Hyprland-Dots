@@ -91,7 +91,7 @@ window#waybar {
 }
 
 #custom-notification {
-  padding: 0px 6px;
+  padding: 0px 4px;
   transition: all 0.3s ease;
   color: @color4;
 }
