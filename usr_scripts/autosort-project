@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_modules_path="/mnt/h/Dev/Agroin/"
+_modules_path="/mnt/h/Games/gameserver/audio/autosort/"
 
 if [ -z "$1" ]; then
   echo "No se ingreso ninguna opcion (dev | run)"
@@ -37,24 +37,19 @@ case $_input in
 
     tmux rename-window -t $_input:1 'frontend'
     tmux send-keys -t $_input:1 'cd frontend' C-m
-    tmux send-keys -t $_input:1 'pnpm install' C-m
-    tmux send-keys -t $_input:1 'pnpm run dev' C-m
+    tmux send-keys -t $_input:1 'yarn' C-m
+    tmux send-keys -t $_input:1 'yarn dev' C-m
 
     tmux new-window -t $_input:2 -n 'backend'
     tmux send-keys -t $_input:2 'cd backend' C-m
-    tmux send-keys -t $_input:2 'pyenv activate agroin' C-m
+    tmux send-keys -t $_input:2 'pyenv activate autosort' C-m
     tmux send-keys -t $_input:2 'pip install -r requirements.txt' C-m
     tmux send-keys -t $_input:2 'python manage.py migrate' C-m
     tmux send-keys -t $_input:2 'python manage.py runserver' C-m
 
-    # tmux new-window -t $_input:3 -n 'celery'
-    # tmux send-keys -t $_input:3 'cd backend' C-m
-    # tmux send-keys -t $_input:3 'pyenv activate agroin' C-m
-    # tmux send-keys -t $_input:3 'celery -A core worker -l INFO' C-m
-
-    tmux new-window -t $_input:4 -n 'bash'
-    tmux send-keys -t $_input:4 'cd backend' C-m
-    tmux send-keys -t $_input:4 'pyenv activate agroin' C-m
+    tmux new-window -t $_input:3 -n 'bash'
+    tmux send-keys -t $_input:3 'cd backend' C-m
+    tmux send-keys -t $_input:3 'pyenv activate agroin' C-m
 
     tmux attach-session -t $_input:1
     tmux kill-session -t $_input

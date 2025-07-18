@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Accepts one argument which corresponds to the tmux session name.
+# If the sessions doesn't exist, it creates a new session opening neovim on the first window.
+# In the case the session already exists, it attaches to it.
+
+if [ -z "$1" ]; then
+    echo "No session name was provided"
+    exit 1
+fi
+
+_input="$1"
+
+if tmux has-session -t $_input &>/dev/null; then
+    tmux attach-session -t $_input:1
+else
+    tmux new-session -d -s $_input
+
+    tmux rename-window -t $_input:1 'nvim'
+    tmux send-keys -t $_input:1 'nvim .' C-m
+    tmux attach-session -t $_input:1
+fi

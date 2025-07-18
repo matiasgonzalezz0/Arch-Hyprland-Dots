@@ -110,12 +110,23 @@ alias kssh="kitten ssh"
 alias icat="kitten icat"
 alias nfzf="fd --type f --hidden --exclude .git | fzf | xargs nvim"
 
+# Source secret environment variables if the file exists
+[[ -f ~/.zsh_secrets ]] && source ~/.zsh_secrets
+
 start-ssh-git() {
 	if [ -z "$SSH_AUTH_SOCK" ]; then
 			eval $(ssh-agent)
 	fi
 
 	ssh-add ~/.ssh/id_ed25519_git
+}
+
+start-ssh-git488() {
+	if [ -z "$SSH_AUTH_SOCK" ]; then
+			eval $(ssh-agent)
+	fi
+
+	ssh-add ~/.ssh/id_ed25519_git488
 }
 
 pdf-view() {
@@ -130,3 +141,11 @@ export NVM_DIR="$HOME/.nvm"
 
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+
+# pnpm
+export PNPM_HOME="/home/auto_root/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

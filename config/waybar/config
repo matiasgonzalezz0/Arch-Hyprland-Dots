@@ -1,1 +1,23 @@
-/home/alt-h4t/.config/waybar/configs/[TOP] Default_v2
+{
+  "include": "~/.config/waybar/modules",
+  "layer": "top",
+  "position": "top",
+  "modules-left": [
+    "custom/notification",
+    "clock",
+    "custom/separator",
+    "cpu",
+    "memory",
+    "temperature",
+  ],
+  "modules-center": [
+    "hyprland/workspaces",
+  ],
+  "modules-right": [
+    "pulseaudio",
+    "pulseaudio#microphone",
+    "tray",
+    "bluetooth",
+    "group/audio",
+  ],
+}
