@@ -47,10 +47,10 @@ case $_input in
     tmux send-keys -t $_input:2 'python manage.py migrate' C-m
     tmux send-keys -t $_input:2 'python manage.py runserver' C-m
 
-    # tmux new-window -t $_input:3 -n 'celery'
-    # tmux send-keys -t $_input:3 'cd backend' C-m
-    # tmux send-keys -t $_input:3 'pyenv activate agroin' C-m
-    # tmux send-keys -t $_input:3 'celery -A core worker -l INFO' C-m
+    tmux new-window -t $_input:3 -n 'celery'
+    tmux send-keys -t $_input:3 'cd backend' C-m
+    tmux send-keys -t $_input:3 'pyenv activate agroin' C-m
+    tmux send-keys -t $_input:3 'celery -A core worker -l INFO' C-m
 
     tmux new-window -t $_input:4 -n 'bash'
     tmux send-keys -t $_input:4 'cd backend' C-m
