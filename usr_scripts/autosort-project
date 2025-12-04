@@ -25,7 +25,7 @@ case $_input in
 
     tmux new-window -t $_input:3 -n 'bash'
     tmux send-keys -t $_input:3 'cd backend' C-m
-    tmux send-keys -t $_input:3 'pyenv activate agroin' C-m
+    tmux send-keys -t $_input:3 'pyenv activate autosort' C-m
 
     tmux attach-session -t $_input:1
     tmux kill-session -t $_input
@@ -49,7 +49,7 @@ case $_input in
 
     tmux new-window -t $_input:3 -n 'bash'
     tmux send-keys -t $_input:3 'cd backend' C-m
-    tmux send-keys -t $_input:3 'pyenv activate agroin' C-m
+    tmux send-keys -t $_input:3 'pyenv activate autosort' C-m
 
     tmux attach-session -t $_input:1
     tmux kill-session -t $_input
