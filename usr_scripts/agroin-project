@@ -15,12 +15,12 @@ case $_input in
 
     tmux new-session -d -s $_input
 
-    tmux rename-window -t $_input:1 'frontend'
-    tmux send-keys -t $_input:1 'cd frontend' C-m
+    tmux rename-window -t $_input:1 'backend'
+    tmux send-keys -t $_input:1 'cd backend' C-m
     tmux send-keys -t $_input:1 'nvim .' C-m
 
-    tmux new-window -t $_input:2 -n 'backend'
-    tmux send-keys -t $_input:2 'cd backend' C-m
+    tmux new-window -t $_input:2 -n 'frontend'
+    tmux send-keys -t $_input:2 'cd frontend' C-m
     tmux send-keys -t $_input:2 'nvim .' C-m
 
     tmux new-window -t $_input:3 -n 'bash'
@@ -35,22 +35,22 @@ case $_input in
 
     tmux new-session -d -s $_input
 
-    tmux rename-window -t $_input:1 'frontend'
-    tmux send-keys -t $_input:1 'cd frontend' C-m
-    tmux send-keys -t $_input:1 'pnpm install' C-m
-    tmux send-keys -t $_input:1 'pnpm run dev' C-m
+    tmux rename-window -t $_input:1 'backend'
+    tmux send-keys -t $_input:1 'cd backend' C-m
+    tmux send-keys -t $_input:1 'pyenv activate agroin' C-m
+    tmux send-keys -t $_input:1 'pip install -r requirements.txt' C-m
+    tmux send-keys -t $_input:1 'python manage.py migrate' C-m
+    tmux send-keys -t $_input:1 'python manage.py runserver' C-m
 
-    tmux new-window -t $_input:2 -n 'backend'
+    tmux new-window -t $_input:2 -n 'celery'
     tmux send-keys -t $_input:2 'cd backend' C-m
     tmux send-keys -t $_input:2 'pyenv activate agroin' C-m
-    tmux send-keys -t $_input:2 'pip install -r requirements.txt' C-m
-    tmux send-keys -t $_input:2 'python manage.py migrate' C-m
-    tmux send-keys -t $_input:2 'python manage.py runserver' C-m
+    tmux send-keys -t $_input:2 'celery -A core worker -l INFO' C-m
 
-    tmux new-window -t $_input:3 -n 'celery'
-    tmux send-keys -t $_input:3 'cd backend' C-m
-    tmux send-keys -t $_input:3 'pyenv activate agroin' C-m
-    tmux send-keys -t $_input:3 'celery -A core worker -l INFO' C-m
+    tmux new-window -t $_input:3 -n 'frontend'
+    tmux send-keys -t $_input:3 'cd frontend' C-m
+    tmux send-keys -t $_input:3 'pnpm install' C-m
+    tmux send-keys -t $_input:3 'pnpm run dev' C-m
 
     tmux new-window -t $_input:4 -n 'bash'
     tmux send-keys -t $_input:4 'cd backend' C-m
