@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_modules_path="/mnt/h/Games/gameserver/audio/autosort/"
+_modules_path="/mnt/e/Dev/autosort/"
 
 if [ -z "$1" ]; then
   echo "No se ingreso ninguna opcion (dev | run)"

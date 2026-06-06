@@ -144,9 +144,15 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 # pnpm
-export PNPM_HOME="/home/auto_root/.local/share/pnpm"
+export PNPM_HOME="/home/lin4/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# android
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+export ANDROID_HOME=$HOME/Android/Sdk                                                                                                                                                                                                                      
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
+# android end
