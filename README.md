@@ -2,6 +2,8 @@
 
 Configuration files that I use for my Hyprland installation.
 
+This repository is mainly used to store personal config files.
+
 My neovim configs live in [matiasgonzalezz0/Neovim-Config](https://github.com/matiasgonzalezz0/Neovim-Config).
 
 ## How it works
