@@ -1,6 +1,6 @@
 # Arch-Hyprland-Dots
 
-Configuration files that I use for my Hyprland installation. Most of them are based on [JaKooLit/Hyprland-Dots](https://github.com/JaKooLit/Hyprland-Dots); that repository has instructions on how to install and use those dots.
+Configuration files that I use for my Hyprland installation.
 
 My neovim configs live in [matiasgonzalezz0/Neovim-Config](https://github.com/matiasgonzalezz0/Neovim-Config).
 
@@ -40,7 +40,7 @@ A fresh Arch install is very bare, so:
 sudo pacman -S --needed git libnewt sudo diffutils
 ```
 
-These are only the scripts' requirements. The programs the configs are for (Hyprland, waybar, rofi, wallust, ...) are installed separately, see JaKooLit's repo.
+These are only the scripts' requirements. The programs the configs are for (Hyprland, waybar, rofi, wallust, ...) are installed separately.
 
 `/usr/local/bin` also contains files that don't belong here (distro-provided ones like the CachyOS `mkinitcpio` wrapper, and private work scripts). Scripts are therefore brought from the machine into `usr_scripts/` **by hand**, only the ones that are mine.
 
