@@ -35,6 +35,5 @@ The Hyprland config is Lua (`config/hypr/hyprland.lua` and the files next to it)
 These are rewritten by wallust (on wallpaper change) or by scripts, so they are not tracked:
 
 - wallust outputs, whose sources are the templates in `config/wallust/templates/` (see `config/wallust/wallust.toml`): `cava/config`, `kitty/kitty.conf`, `hypr/wallust/wallust-hyprland.conf`, `rofi/wallust/colors-rofi.rasi`, `swaync/wallust/colors-wallust.css`, `waybar/wallust/colors-waybar.css`. To change kitty or cava settings, edit the template, not the generated file.
-- `config/rofi/.current_wallpaper`, a wallpaper symlink some JaKooLit scripts create (e.g. `WallustSwww.sh`, which I don't use). Machine state, never commit it.
 
 On a fresh install, kitty and cava have no config until wallust runs once (e.g. by setting a wallpaper).

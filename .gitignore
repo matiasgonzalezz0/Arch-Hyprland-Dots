@@ -8,6 +8,3 @@ config/waybar/wallust/colors-waybar.css
 
 # Local Claude Code settings
 .claude/
-
-# Wallpaper symlink used by some JaKooLit scripts; machine state, not config
-config/rofi/.current_wallpaper
