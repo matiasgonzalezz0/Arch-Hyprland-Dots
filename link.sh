@@ -25,6 +25,10 @@ _config_names=(
 link() {
 	local _src="$_repo/$1" _dst="$2"
 
+	if [[ ! -e "$_src" ]]; then
+		echo "missing: $1 does not exist in the repo, skipping $_dst (move it into the repo first)" >&2
+		return
+	fi
 	if [[ -L "$_dst" && "$(readlink "$_dst")" == "$_src" ]]; then
 		echo "ok:     $_dst"
 		return
