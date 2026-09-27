@@ -8,3 +8,6 @@ config/waybar/wallust/colors-waybar.css
 
 # Local Claude Code settings
 .claude/
+
+# Symlink to the current wallpaper, recreated by config/hypr/scripts/WallustSwww.sh
+config/rofi/.current_wallpaper
