@@ -16,8 +16,9 @@
   "modules-right": [
     "pulseaudio",
     "pulseaudio#microphone",
+    "network",
     "tray",
     "bluetooth",
-    "group/audio",
+    "battery",
   ],
 }

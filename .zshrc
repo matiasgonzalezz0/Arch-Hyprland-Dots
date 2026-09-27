@@ -111,6 +111,9 @@ alias kssh="kitten ssh"
 alias icat="kitten icat"
 alias nfzf="fd --type f --hidden --exclude .git | fzf | xargs nvim"
 
+alias claude-work="CLAUDE_CONFIG_DIR=~/.claude-work claude"
+alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude-personal claude"
+
 # Source secret environment variables if the file exists
 [[ -f ~/.zsh_secrets ]] && source ~/.zsh_secrets
 
@@ -136,12 +139,8 @@ pdf-view() {
 
 fastfetch -c ~/.config/fastfetch/config.jsonc
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+source /usr/share/nvm/init-nvm.sh
 
 # pnpm
 export PNPM_HOME="/home/lin4/.local/share/pnpm"
@@ -151,8 +150,7 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-# android
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
-export ANDROID_HOME=$HOME/Android/Sdk                                                                                                                                                                                                                      
-export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
-# android end
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"

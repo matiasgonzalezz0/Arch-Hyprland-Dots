@@ -1,0 +1,34 @@
+#!/bin/bash
+
+BOOST_PATH="/sys/devices/system/cpu/cpufreq/boost"
+
+usage() {
+    echo "Usage: cpu-boost [on|off|status]"
+    exit 1
+}
+
+if [[ $# -ne 1 ]]; then
+    usage
+fi
+
+case "$1" in
+    on)
+        echo 1 | sudo tee "$BOOST_PATH" > /dev/null
+        echo "CPU boost enabled."
+        ;;
+    off)
+        echo 0 | sudo tee "$BOOST_PATH" > /dev/null
+        echo "CPU boost disabled."
+        ;;
+    status)
+        val=$(cat "$BOOST_PATH")
+        if [[ "$val" -eq 1 ]]; then
+            echo "CPU boost is ON"
+        else
+            echo "CPU boost is OFF"
+        fi
+        ;;
+    *)
+        usage
+        ;;
+esac

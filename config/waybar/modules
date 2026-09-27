@@ -3,7 +3,7 @@
     "active-only": false,
     "all-outputs": false,
     "format": "{icon}",
-    "on-click": "activate",
+    "cursor": true,
     "format-icons": {
       "active": "",
       "default": "",
@@ -54,6 +54,51 @@
         "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
       }
     }
+  },
+  "network": {
+    "interface": "wlan0",
+    "interval": 5,
+    "format-wifi": "{icon}  {signalStrength}%",
+    "format-icons": [
+      "󰤟", "󰤢", "󰤥", "󰤨"
+    ],
+    "format-ethernet": "󰈀  {ipaddr}",
+    "format-linked": "󰈀  {ifname} (no IP)",
+    "format-disconnected": "󰤭 ",
+    "format-disabled": "󰀝 ",
+    "tooltip-format-wifi": "󰤨  {essid} ({signalStrength}%)\n󰩟 {ipaddr}/{cidr}\n󰑩 {gwaddr}",
+    "tooltip-format-ethernet": "󰈀 {ifname}\n󰩟 {ipaddr}/{cidr}\n󰑩 {gwaddr}",
+    "tooltip-format-disconnected": "󰤭 Disconnected",
+    "tooltip": true,
+    "on-click": "kitty --title nmtui sh -c 'nmtui'",
+    "on-click-right": "~/.config/hypr/scripts/AirplaneMode.sh"
+  },
+  "battery": {
+    "bat": "BAT1",
+    "adapter": "ACAD",
+    "interval": 30,
+    "states": {
+      "good": 80,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "{icon} {capacity}%",
+    "format-plugged": "{icon} {capacity}%",
+    "format-full": "󰂄 {capacity}%",
+    "format-icons": {
+      "charging": [
+        "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"
+      ],
+      "plugged": [
+        "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"
+      ],
+      "default": [
+        "󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"
+      ]
+    },
+    "tooltip": true,
+    "tooltip-format": "{capacity}% | {power:0.1f}W\n{timeTo}"
   },
   "bluetooth": {
     "format": " ",

@@ -105,6 +105,39 @@ window#waybar {
   transition: all 0.3s ease;
 }
 
+#network {
+  padding: 0px 8px;
+  transition: all 0.3s ease;
+  color: @color7;
+}
+#network.disconnected,
+#network.disabled,
+#network.linked {
+  color: @color4;
+}
+
+#battery {
+  padding: 0px 8px;
+  transition: all 0.3s ease;
+  color: @color7;
+}
+#battery.charging,
+#battery.plugged {
+  color: @color6;
+}
+#battery.warning:not(.charging) {
+  color: @color5;
+}
+#battery.critical:not(.charging) {
+  color: #ff6699;
+  animation: battery-blink 1s steps(2, start) infinite;
+}
+@keyframes battery-blink {
+  to {
+    color: @color7;
+  }
+}
+
 #tray {
   padding: 0px 5px;
   transition: all 0.3s ease;

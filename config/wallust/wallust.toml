@@ -1,36 +1,35 @@
-# wallust 3.0 beta.*
+# wallust 4.0-alpha
+# Migrated from v3 config (original kept at wallust-old.toml).
+# Docs: https://explosion-mental.codeberg.page/wallust/v4.html
 
-# backend options: "full", "resized", "wal", "thumb", "fastresize", "kmeans" 
-# backend = "kmeans"
+# How the image is read/downscaled before color extraction.
+# options: "full", "resized", "wal", "thumb", "fast-resize"
+# NOTE: "kmeans" is no longer a backend in v4 -- it is a palette (see below).
 backend = "full"
 
-# color_space options: "lab", "labmixed", "lch", "lchmixed", "lchansi"
-# color_space = "lch"
-color_space = "lab"
+# v4 replaced the v3 scheme names (dark/dark16/harddark/softlight/...) with a
+# palette *algorithm* plus a light/dark style.
+# palette options:
+#  * salience - weights colors by how much they stand out (v4 default, was `dark`)
+#  * ansi     - maps the image onto standard ANSI color slots
+#  * kmeans   - k-means clustering over the image's colors
+palette = "salience"
 
-# NOTE: All filters will fill 16 colors (from color0 to color15), 16 color
-#       variations are the 'ilusion' of more colors by opaquing color1 to color5.
-# Use the most prominent colors in a way that makes sense, a scheme:
-#  * dark        - 8 dark colors, dark background and light contrast
-#  * dark16      - Same as `dark` but uses the 16 colors trick
-#  * harddark    - Same as `dark` with hard hue colors
-#  * harddark16  - Harddark with 16 color variation
-#  * light       - Light bg, dark fg
-#  * light16     - Same as `light` but uses the 16 color trick
-#  * softdark    - Variant of softlight, uses the lightest colors and a dark
-#                   background (could be interpreted as `dark` inversed)
-#  * softdark16  - softdark with 16 color variation
-#  * softlight   - Light with soft pastel colors, counterpart of `harddark`
-#  * softlight16 - softlight with 16 color variation
-palette = "dark"
+# Background/foreground orientation. options: "dark", "light"
+style = "dark"
 
-# Difference between similar colors, used by the colorspace:
+# Difference between similar colors when picking the palette:
 #  1          Not perceptible by human eyes.
 #  1 - 2      Perceptible through close observation.
 #  2 - 10     Perceptible at a glance.
 #  11 - 49    Colors are more similar than opposite
 #  100        Colors are exact opposite
 threshold = 10
+
+# NOTE: `color_space` was removed in v4 and is gone from this config.
+# NOTE: do NOT add `<name>.pywal = true` to the templates below -- these
+#       templates use v4's `{{color0}}` syntax; pywal mode expects `{color0}`
+#       and would emit the placeholders literally.
 
 [templates]
 cava.template = 'colors-cava'
