@@ -5,3 +5,6 @@ config/kitty/kitty.conf
 config/rofi/wallust/colors-rofi.rasi
 config/swaync/wallust/colors-wallust.css
 config/waybar/wallust/colors-waybar.css
+
+# Local Claude Code settings
+.claude/
