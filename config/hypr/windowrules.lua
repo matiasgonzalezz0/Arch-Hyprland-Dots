@@ -23,6 +23,12 @@ hl.layer_rule({
     ignore_alpha = 0.5,
 })
 
+-- Ignore apps asking to start maximized, otherwise they cover the workspace instead of tiling
+hl.window_rule({
+    match          = { class = ".*" },
+    suppress_event = "maximize",
+})
+
 hl.window_rule({
     match   = { class = "^(kitty)$" },
     opacity = activeOpa .. " override " .. inactiveOpa .. " override " .. fullscreenOpa .. " override",
