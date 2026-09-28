@@ -17,7 +17,7 @@ hl.on("hyprland.start", function()
     -- Note: originally `exec` (re-runs on reload) — check for a hyprland.reload event if needed
     hl.exec_cmd("awww-daemon")
     hl.exec_cmd("/usr/local/bin/get_kbd_layout.sh " .. keyboard .. " > ~/.cache/kbd_layout")
-    hl.exec_cmd("/usr/local/bin/rclone-onedrive.sh")
+    -- hl.exec_cmd("/usr/local/bin/rclone-onedrive.sh")
 
     -- Note: the XWayland primary output is set dynamically in monitors.lua (apply()).
 
