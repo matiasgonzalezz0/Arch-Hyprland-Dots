@@ -48,3 +48,5 @@ for _name in "${_config_names[@]}"; do
 done
 
 link ".zshrc" "$HOME/.zshrc"
+
+link ".tmux.conf" "$HOME/.tmux.conf"

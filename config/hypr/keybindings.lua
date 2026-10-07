@@ -85,3 +85,9 @@ hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("/usr/local/bin/take_sc.sh ~/
 
 -- Restart Waybar and Hyprpaper
 hl.bind(mainMod .. " + CTRL + P", hl.dsp.exec_cmd("/usr/local/bin/restart_waybar.sh && /usr/local/bin/restart_swaync.sh"))
+
+-- Toggle the extra HDMI TV on/off (desktop only, see monitors_desktop.lua)
+local monitors = require("monitors")
+if monitors.toggle_tv then
+    hl.bind(mainMod .. " + ALT + T", function() monitors.toggle_tv() end)
+end

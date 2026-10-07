@@ -17,6 +17,7 @@ then
 	grim -g "$_area_selected" - | wl-copy
 	_notif_msg="Screenshot saved to clipboard"
 else
+	mkdir -p "$(dirname "$1")"
 	grim -g "$_area_selected" -t png $1
 	wl-copy < $1
 	_notif_msg="Screenshot saved to $1"

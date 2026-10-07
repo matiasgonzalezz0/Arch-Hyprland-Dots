@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Re-probe an HDMI connector so the driver rebuilds its mode list.
+# An HDMI 2.1 TV that was in standby when the driver probed it only offers up to
+# 4K@60; once it's on, a re-probe brings back 4K@120/144. The connector is briefly
+# forced off first so the compositor sees a fresh hotplug with the new modes
+# (it skips re-reading modes of a connector that stays connected).
+#
+# Called from toggle_tv() in monitors_desktop.lua via `sudo -n` (no password prompt;
+# does nothing if the rule below is missing).
+#
+# Setup (once per machine):
+#   1. Install to /usr/local/bin (root-owned, so the sudo rule can't be abused by
+#      editing the script):   ./install_scripts.sh   -> tick tv-redetect
+#   2. Allow running it as root without a password:
+#        echo "$USER ALL=(root) NOPASSWD: /usr/local/bin/tv-redetect" | sudo tee /etc/sudoers.d/tv-redetect
+#        sudo chmod 440 /etc/sudoers.d/tv-redetect
+#        sudo visudo -c        # must print "parsed OK"
+#   Remove:  sudo rm /etc/sudoers.d/tv-redetect /usr/local/bin/tv-redetect
+#
+# Safety: it only accepts HDMI connector names (no paths or wildcards), only writes
+# "off"/"detect" to that connector's sysfs status, and always restores "detect", so
+# the worst a caller can do is make an HDMI screen blink.
+
+set -euo pipefail
+
+if [[ $# -ne 1 || ! $1 =~ ^HDMI-[A-Z]-[0-9]+$ ]]; then
+    echo "Usage: tv-redetect <HDMI connector>   (e.g. HDMI-A-1)" >&2
+    exit 1
+fi
+
+shopt -s nullglob
+status=(/sys/class/drm/card*-"$1"/status)
+if (( ${#status[@]} == 0 )); then
+    echo "tv-redetect: no connector named $1" >&2
+    exit 1
+fi
+
+# Never leave the connector forced off, even if interrupted during the sleep.
+restore() {
+    for f in "${status[@]}"; do echo detect > "$f"; done
+}
+trap restore EXIT
+
+for f in "${status[@]}"; do echo off > "$f"; done
+sleep 1
