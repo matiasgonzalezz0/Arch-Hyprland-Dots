@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+# Package requirements: wl-clipboard (Wayland) or xclip (X11)
+
+# Dumps a directory as text to paste into a chat agent: the list of files, then
+# every file as "./path:" followed by its content. Copies it to the clipboard.
+#
+# Usage: catdir [-s|--show] [directory]     (directory defaults to .)
+#   -s, --show   print the dump instead of copying it
+#
+# Inside a git repo .gitignore is respected; anywhere else everything except
+# .git is included. Binary files are listed but their content is skipped.
+
+set -euo pipefail
+
+_show=0
+_dir="."
+
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		-s|--show) _show=1 ;;
+		-h|--help)
+			echo "Usage: catdir [-s|--show] [directory]"
+			exit 0
+			;;
+		-*)
+			echo "catdir: unknown option $1" >&2
+			exit 1
+			;;
+		*) _dir="$1" ;;
+	esac
+	shift
+done
+
+if [[ ! -d "$_dir" ]]; then
+	echo "catdir: $_dir is not a directory" >&2
+	exit 1
+fi
+
+cd "$_dir"
+
+if git rev-parse --is-inside-work-tree &>/dev/null; then
+	mapfile -d '' _found < <(git ls-files -co --exclude-standard -z | sort -zu)
+else
+	mapfile -d '' _found < <(find . -name .git -prune -o -type f -printf '%P\0' | sort -z)
+fi
+
+# git still lists tracked files that were deleted, and submodules as one entry
+_files=()
+for _file in "${_found[@]}"; do
+	[[ -f "$_file" ]] && _files+=("$_file")
+done
+
+if [[ ${#_files[@]} -eq 0 ]]; then
+	echo "catdir: no files in $_dir" >&2
+	exit 1
+fi
+
+dump() {
+	local _file
+
+	printf './%s\n' "${_files[@]}"
+
+	for _file in "${_files[@]}"; do
+		printf '\n./%s:\n' "$_file"
+		if [[ -s "$_file" ]] && ! grep -Iq '' "$_file"; then
+			echo "[binary file, content skipped]"
+			continue
+		fi
+		cat "$_file"
+		# keep the next header on its own line if the file has no trailing newline
+		[[ -z "$(tail -c1 "$_file")" ]] || echo
+	done
+}
+
+if [[ $_show -eq 1 ]]; then
+	dump
+	exit 0
+fi
+
+if [[ -n "${WAYLAND_DISPLAY:-}" ]]; then
+	dump | wl-copy
+elif [[ -n "${DISPLAY:-}" ]]; then
+	dump | xclip -selection clipboard
+else
+	echo "catdir: no Wayland or X session found, use --show" >&2
+	exit 1
+fi
+
+echo "Copied ${#_files[@]} files to clipboard" >&2
