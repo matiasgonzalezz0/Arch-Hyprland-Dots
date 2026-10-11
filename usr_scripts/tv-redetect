@@ -1,13 +1,21 @@
 #!/bin/bash
 
-# Re-probe an HDMI connector so the driver rebuilds its mode list.
-# An HDMI 2.1 TV that was in standby when the driver probed it only offers up to
-# 4K@60; once it's on, a re-probe brings back 4K@120/144. The connector is briefly
+# Re-probe an HDMI connector so the driver rebuilds its mode list, or force it off.
+#
+#   tv-redetect <connector>        re-probe
+#   tv-redetect <connector> off    force off until the next re-probe (or a reboot)
+#
+# Re-probe: an HDMI 2.1 TV that was in standby when the driver probed it only offers
+# up to 4K@60; once it's on, a re-probe brings back 4K@120/144. The connector is briefly
 # forced off first so the compositor sees a fresh hotplug with the new modes
 # (it skips re-reading modes of a connector that stays connected).
 #
-# Called from toggle_tv() in monitors_desktop.lua via `sudo -n` (no password prompt;
-# does nothing if the rule below is missing).
+# Off: a TV in standby drops and re-asserts hotplug about once an hour, and the driver
+# re-probes it every time, freezing the compositor for up to a second. While forced
+# off it isn't probed (the events still arrive, but cost ~130 ms instead).
+#
+# Called from monitors_desktop.lua via `sudo -n` (no password prompt; does nothing if
+# the rule below is missing).
 #
 # Setup (once per machine):
 #   1. Install to /usr/local/bin (root-owned, so the sudo rule can't be abused by
@@ -18,14 +26,14 @@
 #        sudo visudo -c        # must print "parsed OK"
 #   Remove:  sudo rm /etc/sudoers.d/tv-redetect /usr/local/bin/tv-redetect
 #
-# Safety: it only accepts HDMI connector names (no paths or wildcards), only writes
-# "off"/"detect" to that connector's sysfs status, and always restores "detect", so
-# the worst a caller can do is make an HDMI screen blink.
+# Safety: it only accepts HDMI connector names (no paths or wildcards) and only writes
+# "off"/"detect" to that connector's sysfs status, so the worst a caller can do is keep
+# an HDMI screen off until the next re-probe or reboot.
 
 set -euo pipefail
 
-if [[ $# -ne 1 || ! $1 =~ ^HDMI-[A-Z]-[0-9]+$ ]]; then
-    echo "Usage: tv-redetect <HDMI connector>   (e.g. HDMI-A-1)" >&2
+if [[ $# -lt 1 || $# -gt 2 || ! $1 =~ ^HDMI-[A-Z]-[0-9]+$ || ${2:-off} != off ]]; then
+    echo "Usage: tv-redetect <HDMI connector> [off]   (e.g. HDMI-A-1)" >&2
     exit 1
 fi
 
@@ -34,6 +42,11 @@ status=(/sys/class/drm/card*-"$1"/status)
 if (( ${#status[@]} == 0 )); then
     echo "tv-redetect: no connector named $1" >&2
     exit 1
+fi
+
+if [[ ${2:-} == off ]]; then
+    for f in "${status[@]}"; do echo off > "$f"; done
+    exit 0
 fi
 
 # Never leave the connector forced off, even if interrupted during the sleep.

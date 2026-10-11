@@ -47,6 +47,10 @@ local TV_RULE = "desc:" .. TV.desc
 -- TV on/off state survives `hyprctl reload` but resets to off on a new login.
 local TV_STATE = (os.getenv("XDG_RUNTIME_DIR") or "/tmp") .. "/hypr-tv-enabled"
 
+-- Connector the TV was last seen on. While that connector is forced off (see
+-- forceTvOff) its EDID can't be read, so this is the only way to find it again.
+local TV_CONN = (os.getenv("XDG_CACHE_HOME") or os.getenv("HOME") .. "/.cache") .. "/hypr-tv-connector"
+
 local function tvWanted()
     local f = io.open(TV_STATE, "r")
     if f then f:close() return true end
@@ -130,6 +134,60 @@ local function knownScreen(mon)
     end
 end
 
+-- The TV's connector name. Found by its EDID, which works while Hyprland has it
+-- disabled; while the connector is forced off there's no EDID to read, so fall back
+-- to where it was last seen.
+local function tvConnector()
+    local p = io.popen("ls -d /sys/class/drm/card*-* 2>/dev/null")
+    local out = p and p:read("*a") or ""
+    if p then p:close() end
+    for dir in out:gmatch("[^\n]+") do
+        local f = io.open(dir .. "/edid", "rb")
+        if f then
+            local edid = f:read("*a") or ""
+            f:close()
+            if edid:find(TV.edid, 1, true) then
+                local conn = dir:match("card%d+%-(.+)$")
+                local c = io.open(TV_CONN, "w")
+                if c then c:write(conn) c:close() end
+                return conn
+            end
+        end
+    end
+    local c = io.open(TV_CONN, "r")
+    if c then
+        local conn = c:read("*l")
+        c:close()
+        if conn and conn:match("^[%w%-]+$") then return conn end
+    end
+end
+
+-- If the TV was in standby when the driver probed it (e.g. off at boot), the driver
+-- only offers it up to 4K@60 and never re-checks. tv-redetect (usr_scripts/) re-probes
+-- the connector; the resulting hotplug re-runs apply() with the 120/144 Hz modes.
+-- It also brings the connector back after forceTvOff().
+-- `sudo -n` so it silently does nothing if the sudoers rule isn't installed.
+local function redetectTv()
+    local conn = tvConnector()
+    if conn then
+        hl.exec_cmd("sudo -n /usr/local/bin/tv-redetect " .. conn)
+    end
+end
+
+-- In standby the TV drops and re-asserts hotplug about once an hour, and the driver
+-- re-probes it every time, freezing the compositor for up to a second. Forcing its
+-- connector off in the kernel stops the probing (the events still arrive, but cost
+-- ~130 ms). Lasts until redetectTv() or a reboot.
+local function forceTvOff()
+    local conn = tvConnector()
+    if conn then
+        hl.exec_cmd("sudo -n /usr/local/bin/tv-redetect " .. conn .. " off")
+    end
+end
+
+-- Set when apply() has just disabled the TV, so the next pass can force it off.
+local tvReleased = false
+
 local function apply()
     local wantTv = tvWanted()
 
@@ -161,6 +219,13 @@ local function apply()
     if tv and not wantTv then
         hl.monitor({ output = TV_RULE, disabled = true })
         tv = nil
+        tvReleased = true
+    elseif tvReleased and not wantTv then
+        -- Only once Hyprland itself has let go of the TV: forcing the connector off
+        -- while its CRTC is still lit is the same trap as starting it disabled (see
+        -- the safety-net note above).
+        tvReleased = false
+        forceTvOff()
     end
 
     -- Physical row, left -> right: TV at x=0, then known screens by slot, then unknown.
@@ -257,33 +322,6 @@ hl.on("monitor.removed", function() schedule() end)
 -- event does NOT re-fire, so this is what re-applies the layout on reload; on initial
 -- boot hyprland.start / monitor.added re-trigger it once monitors are fully enumerated.
 schedule()
-
--- The TV's connector name, found by its EDID (works while it's disabled).
-local function tvConnector()
-    local p = io.popen("ls -d /sys/class/drm/card*-* 2>/dev/null")
-    if not p then return nil end
-    local out = p:read("*a") or ""
-    p:close()
-    for dir in out:gmatch("[^\n]+") do
-        local f = io.open(dir .. "/edid", "rb")
-        if f then
-            local edid = f:read("*a") or ""
-            f:close()
-            if edid:find(TV.edid, 1, true) then return dir:match("card%d+%-(.+)$") end
-        end
-    end
-end
-
--- If the TV was in standby when the driver probed it (e.g. off at boot), the driver
--- only offers it up to 4K@60 and never re-checks. tv-redetect (usr_scripts/) re-probes
--- the connector; the resulting hotplug re-runs apply() with the 120/144 Hz modes.
--- `sudo -n` so it silently does nothing if the sudoers rule isn't installed.
-local function redetectTv()
-    local conn = tvConnector()
-    if conn then
-        hl.exec_cmd("sudo -n /usr/local/bin/tv-redetect " .. conn)
-    end
-end
 
 local M = {}
 
