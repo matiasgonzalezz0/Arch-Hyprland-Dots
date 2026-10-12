@@ -117,21 +117,8 @@ alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude-personal claude"
 # Source secret environment variables if the file exists
 [[ -f ~/.zsh_secrets ]] && source ~/.zsh_secrets
 
-start-ssh-git() {
-	if [ -z "$SSH_AUTH_SOCK" ]; then
-			eval $(ssh-agent)
-	fi
-
-	ssh-add ~/.ssh/id_ed25519_git
-}
-
-start-ssh-git488() {
-	if [ -z "$SSH_AUTH_SOCK" ]; then
-			eval $(ssh-agent)
-	fi
-
-	ssh-add ~/.ssh/id_ed25519_git488
-}
+# Use the ssh-agent.socket systemd user unit, keys are added on first use (see ~/.ssh/config)
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 pdf-view() {
 	nohup zathura $1 > /dev/null 2>&1 &

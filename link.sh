@@ -50,3 +50,7 @@ done
 link ".zshrc" "$HOME/.zshrc"
 
 link ".tmux.conf" "$HOME/.tmux.conf"
+
+# Only the config file is linked, ~/.ssh itself holds the keys and stays a real directory
+mkdir -p -m 700 "$HOME/.ssh"
+link ".ssh/config" "$HOME/.ssh/config"

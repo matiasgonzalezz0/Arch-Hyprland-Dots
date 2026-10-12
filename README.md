@@ -21,6 +21,7 @@ Consequences:
 |---|---|---|
 | `config/<app>/` | `~/.config/<app>` | cava, fastfetch, hypr, kitty, MangoHud, rofi, swaync, wallust, waybar, wlogout |
 | `.zshrc` | `~/.zshrc` | |
+| `.ssh/config` | `~/.ssh/config` | only the file, keys stay in `~/.ssh` and are gitignored here |
 | `usr_scripts/` | copied to `/usr/local/bin` | not linked, see below |
 
 The Hyprland config is Lua (`config/hypr/hyprland.lua` and the files next to it).
