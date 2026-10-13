@@ -76,6 +76,10 @@ hl.bind("XF86AudioPlay",        hl.dsp.exec_cmd("playerctl play-pause"),        
 hl.bind("XF86AudioNext",        hl.dsp.exec_cmd("playerctl next"),                             { locked = true })
 hl.bind("XF86AudioPrev",        hl.dsp.exec_cmd("playerctl previous"),                         { locked = true })
 
+-- Screen brightness
+hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("~/.config/hypr/scripts/Brightness.sh --inc"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("~/.config/hypr/scripts/Brightness.sh --dec"), { locked = true, repeating = true })
+
 -- Switch keyboard layout (to get the name use "hyprctl devices")
 -- hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd("/usr/local/bin/switch_kbd_layout.sh royuan-gaming-keyboard"))
 hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd("/usr/local/bin/switch_kbd_layout.sh sofle-eyelash-sofle-keyboard"))
