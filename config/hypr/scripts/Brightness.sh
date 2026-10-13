@@ -3,11 +3,13 @@
 # Script for Monitor backlights (if supported) using brightnessctl
 
 iDIR="$HOME/.config/swaync/icons"
+# Laptop panel is on the AMD iGPU; nvidia_0 is the dGPU's disconnected eDP
+device="amdgpu_bl*"
 notification_timeout=1000
 
 # Get brightness
 get_backlight() {
-	echo $(brightnessctl -m | cut -d, -f4)
+	echo $(brightnessctl -d "$device" -m | cut -d, -f4)
 }
 
 # Get icons
@@ -33,7 +35,7 @@ notify_user() {
 
 # Change brightness
 change_backlight() {
-	brightnessctl set "$1" && get_icon && notify_user
+	brightnessctl -d "$device" set "$1" && get_icon && notify_user
 }
 
 # Execute accordingly
