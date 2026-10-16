@@ -12,28 +12,15 @@ _backup="$HOME/.config-backup/$(date +%Y%m%d-%H%M%S)"
 _config_names=(
 	"cava"
 	"fastfetch"
+	"hypr"
 	"kitty"
 	"MangoHud"
+	"rofi"
+	"swaync"
+	"wallust"
+	"waybar"
+	"wlogout"
 )
-
-for _arg in "$@"; do
-	case "$_arg" in
-		--hyprland)
-			_config_names+=(
-				"hypr"
-				"rofi"
-				"swaync"
-				"wallust"
-				"waybar"
-				"wlogout"
-			)
-			;;
-		*)
-			echo "Usage: $0 [--hyprland]" >&2
-			exit 1
-			;;
-	esac
-done
 
 link() {
 	local _src="$_repo/$1" _dst="$2"
